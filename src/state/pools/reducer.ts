@@ -46,6 +46,12 @@ export interface PoolData {
   // liquidity
   tvlUSD: number
   tvlUSDChange: number
+  tvlUSDWeek: number
+  tvlUSDWeekChange: number
+
+  // apys
+  apyUSD: number
+  apyUSDWeek: number
 
   // prices
   token0Price: number

@@ -6,7 +6,7 @@ import { DarkGreyCard, GreyBadge } from 'components/Card'
 import Loader, { LoadingRows } from 'components/Loader'
 import { AutoColumn } from 'components/Column'
 import { RowFixed } from 'components/Row'
-import { formatDollarAmount } from 'utils/numbers'
+import { formatAmount, formatDollarAmount } from 'utils/numbers'
 import { PoolData } from 'state/pools/reducer'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import { feeTierPercent } from 'utils'
@@ -16,6 +16,7 @@ import { POOL_HIDE } from '../../constants/index'
 import useTheme from 'hooks/useTheme'
 import { networkPrefix } from 'utils/networkPrefix'
 import { useActiveNetworkVersion } from 'state/application/hooks'
+import Percent from 'components/Percent'
 
 const Wrapper = styled(DarkGreyCard)`
   width: 100%;
@@ -26,7 +27,7 @@ const ResponsiveGrid = styled.div`
   grid-gap: 1em;
   align-items: center;
 
-  grid-template-columns: 20px 3.5fr repeat(3, 1fr);
+  grid-template-columns: 20px 2fr repeat(6, 1fr);
 
   @media screen and (max-width: 900px) {
     grid-template-columns: 20px 1.5fr repeat(2, 1fr);
@@ -62,7 +63,10 @@ const SORT_FIELD = {
   feeTier: 'feeTier',
   volumeUSD: 'volumeUSD',
   tvlUSD: 'tvlUSD',
+  tvlUSDWeek: 'tvlUSDWeek',
   volumeUSDWeek: 'volumeUSDWeek',
+  apyUSD: 'apyUSD',
+  apyUSDWeek: 'apyUSDWeek',
 }
 
 const DataRow = ({ poolData, index }: { poolData: PoolData; index: number }) => {
@@ -84,6 +88,9 @@ const DataRow = ({ poolData, index }: { poolData: PoolData; index: number }) => 
           </RowFixed>
         </Label>
         <Label end={1} fontWeight={400}>
+          {formatDollarAmount(poolData.tvlUSDWeek)}
+        </Label>
+        <Label end={1} fontWeight={400}>
           {formatDollarAmount(poolData.tvlUSD)}
         </Label>
         <Label end={1} fontWeight={400}>
@@ -92,6 +99,13 @@ const DataRow = ({ poolData, index }: { poolData: PoolData; index: number }) => 
         <Label end={1} fontWeight={400}>
           {formatDollarAmount(poolData.volumeUSDWeek)}
         </Label>
+        <Label end={1} fontWeight={400}>
+          {formatAmount(poolData.apyUSD)}
+        </Label>
+        <Label end={1} fontWeight={400}>
+          {formatAmount(poolData.apyUSDWeek)}
+        </Label>
+        {/* <Percent end={true} value={poolData.apyUSDWeek} /> */}
       </ResponsiveGrid>
     </LinkWrapper>
   )
@@ -163,6 +177,9 @@ export default function PoolTable({ poolDatas, maxItems = MAX_ITEMS }: { poolDat
             <ClickableText color={theme.text2} onClick={() => handleSort(SORT_FIELD.feeTier)}>
               Pool {arrow(SORT_FIELD.feeTier)}
             </ClickableText>
+            <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.tvlUSDWeek)}>
+              TVL Week{arrow(SORT_FIELD.tvlUSDWeek)}
+            </ClickableText>
             <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.tvlUSD)}>
               TVL {arrow(SORT_FIELD.tvlUSD)}
             </ClickableText>
@@ -171,6 +188,12 @@ export default function PoolTable({ poolDatas, maxItems = MAX_ITEMS }: { poolDat
             </ClickableText>
             <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.volumeUSDWeek)}>
               Volume 7D {arrow(SORT_FIELD.volumeUSDWeek)}
+            </ClickableText>
+            <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.apyUSD)}>
+              VOL/LIQ {arrow(SORT_FIELD.apyUSD)}
+            </ClickableText>
+            <ClickableText color={theme.text2} end={1} onClick={() => handleSort(SORT_FIELD.apyUSDWeek)}>
+              7D VOL/LIQ {arrow(SORT_FIELD.apyUSDWeek)}
             </ClickableText>
           </ResponsiveGrid>
           <Break />

@@ -190,10 +190,28 @@ export function usePoolDatas(
           100
         : 0
 
+    const tvlUSDWeek = week ? parseFloat(week.totalValueLockedUSD) : 0
+
+    const tvlUSDWeekChange =
+      current && week
+        ? ((parseFloat(current.totalValueLockedUSD) - parseFloat(week.totalValueLockedUSD)) /
+            parseFloat(week.totalValueLockedUSD)) *
+          100
+        : 0
+
     const tvlToken0 = current ? parseFloat(current.totalValueLockedToken0) : 0
     const tvlToken1 = current ? parseFloat(current.totalValueLockedToken1) : 0
 
     const feeTier = current ? parseInt(current.feeTier) : 0
+
+    const MAX_TIER = 10000
+
+    const apyUSD = tvlUSD && feeTier && volumeUSD ? (volumeUSD / tvlUSD) * (feeTier / MAX_TIER) : 0
+
+    const apyUSDWeek =
+      tvlUSDWeek && tvlUSD && feeTier && volumeUSDWeek
+        ? (volumeUSDWeek / ((tvlUSD + tvlUSDWeek) / 2)) * (feeTier / MAX_TIER)
+        : 0
 
     if (current) {
       accum[address] = {
@@ -222,9 +240,13 @@ export function usePoolDatas(
         volumeUSDChange,
         volumeUSDWeek,
         tvlUSD,
+        tvlUSDWeek,
         tvlUSDChange,
+        tvlUSDWeekChange,
         tvlToken0,
         tvlToken1,
+        apyUSD,
+        apyUSDWeek,
       }
     }
 
